@@ -1,0 +1,4 @@
+input UserInput {
+  name: String
+  email: String
+}
