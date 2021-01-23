@@ -32,8 +32,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MccColorPickerModule } from 'material-community-components';
 import { MatBadgeModule } from '@angular/material/badge';
 
-import { MatSelectSearchModule } from './components/mat-select-search/mat-select-search.module';
-
 @NgModule({
   imports: [
     MccColorPickerModule.forRoot({
@@ -73,7 +71,6 @@ import { MatSelectSearchModule } from './components/mat-select-search/mat-select
     MatDividerModule,
     MccColorPickerModule,
     MatBadgeModule,
-    MatSelectSearchModule,
     MatProgressBarModule
   ]
 })

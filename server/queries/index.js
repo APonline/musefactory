@@ -1,3 +1,3 @@
 import user from './user';
 
-export default `type Query { ${ user }}`;
+export default `type Query { ${ user } }`;

@@ -7,4 +7,4 @@ const upload = `
     scalar Upload
 `;
 
-export default upload + types + inputs + queries + mutations; 
+export default upload + queries + inputs + types + mutations; 

@@ -2,3 +2,9 @@ input UserInput {
   name: String
   email: String
 }
+
+input UploadFile {
+  id: Int!
+  file: Upload!
+  newName: String
+}

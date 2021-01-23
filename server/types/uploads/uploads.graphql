@@ -1,0 +1,7 @@
+type File {
+  id: String
+  filename: String
+  newName: String
+  mimetype: String
+  encoding: String
+}

@@ -1,6 +1,7 @@
 import user from './user';
 import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json';
 import { createWriteStream } from 'fs';
+import "regenerator-runtime/runtime.js";
 
 const storeUpload = async ({ stream, newName, filename, mimetype }) => {
     const path = `uploads/${newName}`;

@@ -20,5 +20,10 @@
       "esnext.asynciterable"
     ],
     "allowSyntheticDefaultImports": true
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true,
+    "skipLibCheck": true
   }
 }
