@@ -18,8 +18,8 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
   ],
   imports: [
     BrowserModule,
-    ApolloModule,
     HttpLinkModule,
+    ApolloModule,
     AppRoutingModule,
     HttpClientModule
   ],

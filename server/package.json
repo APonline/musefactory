@@ -4,15 +4,47 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "babel-watch server.js",
+    "start": "babel-node server.js",
+    "seedDb": "babel-node seed/seed-db.js"
   },
-  "author": "",
+  "author": "Andrew Phillips",
   "license": "ISC",
-  "dependencies": {
-    "apollo-server": "^2.19.2",
-    "graphql-server-express": "^1.4.1",
+  "devDependencies": {
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.12.9",
+    "@babel/node": "^7.12.6",
+    "@babel/preset-env": "^7.12.7",
+    "@graphql-codegen/cli": "^1.19.4",
+    "babel-watch": "^7.0.0",
     "graphql-type-json": "^0.3.2",
-    "neo4j-driver": "^4.2.2",
-    "neo4j-graphql-js": "^2.19.1"
+    "nodemon": "^1.18.7"
+  },
+  "dependencies": {
+    "apollo-boost": "^0.1.22",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "apollo-codegen": "^0.20.2",
+    "apollo-link-http": "^1.5.17",
+    "apollo-server": "^2.19.0",
+    "apollo-server-express": "^2.19.0",
+    "babel-helpers": "^6.24.1",
+    "cross-fetch": "^3.0.6",
+    "dotenv": "^5.0.1",
+    "express-jwt": "^5.3.3",
+    "fs": "0.0.1-security",
+    "graphql": "^14.7.0",
+    "graphql-tag": "^2.11.0",
+    "graphql-tools": "^4.0.8",
+    "graphql-upload": "^11.0.0",
+    "graphql-yoga": "^1.18.3",
+    "jwks-rsa": "^1.11.0",
+    "mongoose": "^5.11.5",
+    "neo4j-driver": "^1.7.7",
+    "neo4j-graphql-js": "^2.17.1",
+    "neomongoose": "^0.1.1",
+    "node-fetch": "^2.6.1",
+    "uuid": "^3.2.1"
   }
 }
