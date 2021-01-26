@@ -1,1 +1,20 @@
-mergeUser(user: UserInput): User
+MergeUser(user: UserInput): User
+    @cypher (
+        statement: """
+            MERGE (u:User {username: $user.username, name: $user.firstname + ' ' + $user.lastname})
+            ON CREATE SET u.dateCreated = datetime.transaction()
+            SET u += $user
+
+            RETURN u as User
+        """
+    )
+
+DeleteUser(id: Int): User
+    @cypher (
+        statement: """
+            MATCH (u:User)
+            WHERE id(u)=$id
+
+            DETACH DELETE u
+        """
+    )

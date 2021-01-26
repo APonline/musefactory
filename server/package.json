@@ -24,7 +24,7 @@
     "apollo-boost": "^0.1.22",
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
-    "apollo-codegen": "^0.20.2",
+    "apollo-codegen": "^0.13.2",
     "apollo-link-http": "^1.5.17",
     "apollo-server": "^2.19.0",
     "apollo-server-express": "^2.19.0",
@@ -33,11 +33,10 @@
     "dotenv": "^5.0.1",
     "express-jwt": "^5.3.3",
     "fs": "0.0.1-security",
-    "graphql": "^14.7.0",
+    "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
     "graphql-tools": "^4.0.8",
     "graphql-upload": "^11.0.0",
-    "graphql-yoga": "^1.18.3",
     "jwks-rsa": "^1.11.0",
     "mongoose": "^5.11.5",
     "neo4j-driver": "^1.7.7",
@@ -45,5 +44,8 @@
     "neomongoose": "^0.1.1",
     "node-fetch": "^2.6.1",
     "uuid": "^3.2.1"
+  },
+  "resolutions": {
+    "graphql": "0.11.7"
   }
 }

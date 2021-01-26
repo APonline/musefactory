@@ -1,6 +1,11 @@
 type User {
-  id: ID!
+  id: String
   name: String
+  username: String
+  firstname: String
+  lastname: String
   email: String
   active: Int
+  dateCreated: Date
+  password: String
 }

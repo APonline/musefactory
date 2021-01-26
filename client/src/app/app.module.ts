@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 // used to create fake backend
 import { fakeBackendProvider } from './helpers/fake-backend';
@@ -48,7 +49,7 @@ import { UserService } from './services/user.service';
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
     // provider used to create fake backend
-    fakeBackendProvider,
+    //fakeBackendProvider,
     AlertService,
     AuthenticationService,
     UserService
@@ -71,7 +72,7 @@ export class AppModule {
 
     const httpLinkWithErrorHandling = ApolloLink.from([
       cleanTypeName,
-      httpLink.create({ uri: `${process.env.apiUrl}`})
+      httpLink.create({ uri: `${environment.apiUrl}`})
     ]);
     apollo.create({
       link: httpLinkWithErrorHandling,

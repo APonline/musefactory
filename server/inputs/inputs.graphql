@@ -1,6 +1,11 @@
 input UserInput {
   name: String
+  username: String
+  firstname: String
+  lastname: String
   email: String
+  password: String
+  dateCreated: Date
 }
 
 input UploadFile {

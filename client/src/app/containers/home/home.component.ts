@@ -11,25 +11,25 @@ export class HomeComponent implements OnInit {
     users = [];
 
     constructor(
-        private authenticationService: AuthenticationService,
-        private userService: UserService
+      private authenticationService: AuthenticationService,
+      private userService: UserService
     ) {
-        this.currentUser = this.authenticationService.currentUserValue;
+      this.currentUser = this.authenticationService.currentUserValue;
     }
 
     ngOnInit() {
-        this.loadAllUsers();
+      this.loadAllUsers();
     }
 
-    deleteUser(id: number) {
-        this.userService.delete(id)
-            .pipe(first())
-            .subscribe(() => this.loadAllUsers());
+    async deleteUser(id) {
+      await this.userService.delete(parseInt(id))
+        .then(() => {
+          this.loadAllUsers()
+        });
     }
 
-    private loadAllUsers() {
-        this.userService.getAll()
-            .pipe(first())
-            .subscribe(users => this.users = users);
+    async loadAllUsers() {
+      this.userService.allUsers()
+        .subscribe(users => this.users = users);
     }
 }

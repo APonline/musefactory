@@ -1,1 +1,10 @@
 allUsers: [User]
+
+Login(username: String, password: String): User
+    @cypher (
+        statement: """
+            MATCH (u:User {username: $username, password: $password})
+
+            RETURN u as User
+        """
+    )
