@@ -5,9 +5,19 @@ import { map } from 'rxjs/operators';
 import { User } from '../types/user';
 import { Mutation } from '../types/mutations'
 import { Query } from '../types/query'
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import {Observable} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
+  //userList = new Subject<User[]>();
+  //userList: Subscription;
+  userList: Observable<User[]>;
+
+  allUsersList = [];
+
+
     constructor(private apollo: Apollo) { }
 
     register(userProfile: User) {
@@ -42,7 +52,9 @@ export class UserService {
     }
 
     allUsers() {
-      return this.apollo.query<Query>({
+      return this.apollo.watchQuery<Query>({
+        fetchPolicy: "network-only",
+        pollInterval: 500,
         query: gql`
           query allUsers {
             User {
@@ -55,9 +67,12 @@ export class UserService {
               email
             }
           }
-          `
-      }).pipe(
-        map(result => result.data.User),
+          `,
+          notifyOnNetworkStatusChange: false
+      })
+      .valueChanges
+      .pipe(
+        map(({data}) => data.User),
       );
     }
 
