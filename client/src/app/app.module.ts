@@ -30,7 +30,7 @@ import { HomeComponent } from './containers/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AlertComponent } from './components/alert/alert.component';
-import { LandingComponent } from './containers/home/landing/landing.component';
+import { LandingComponent } from './containers/landing/landing.component';
 import { MainNavComponent } from './components/navigation/mainNav/mainNav.component';
 
 

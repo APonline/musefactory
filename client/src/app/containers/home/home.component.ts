@@ -4,7 +4,11 @@ import { UserService } from '../../services/user.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { Observable } from 'rxjs';
 
-@Component({ templateUrl: 'home.component.html' })
+@Component({
+  selector: 'app-home',
+  templateUrl: 'home.component.html',
+  styleUrls: ['./home.component.scss']
+ })
 export class HomeComponent implements OnInit {
     currentUser: User;
     userList: Observable<User[]>;

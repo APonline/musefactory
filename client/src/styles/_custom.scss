@@ -84,6 +84,13 @@ label {
   font-family: var(--main-font);
 }
 
+ul,
+li,
+p,
+a {
+  font-family: var(--extra-font);
+}
+
 input {
   font-family: var(--main-font);
   font-weight: 400;
