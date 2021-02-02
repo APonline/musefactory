@@ -57,7 +57,7 @@ export class RegisterComponent implements OnInit {
 
         this.loading = true;
         this.userService.register(this.registerForm.value)
-            .then(
+            /*.then(
                 data => {
                     this.alertService.success('Registration successful', true);
                     this.router.navigate(['/login']);
@@ -66,6 +66,6 @@ export class RegisterComponent implements OnInit {
                     this.alertService.error(error);
                     this.loading = false;
                 }
-            );
+            );*/
     }
 }
