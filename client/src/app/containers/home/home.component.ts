@@ -3,7 +3,6 @@ import { User } from '../../types/user';
 import { UserService } from '../../services/user.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -12,23 +11,22 @@ import { Subscription } from 'rxjs';
  })
 export class HomeComponent implements OnInit {
     currentUser: User;
-    //userList: [];
-    //userList: Subscription;
-    userList: Observable<any>;
-
-    private querySubscription: Subscription;
+    userList: any[];
 
     constructor(
       private authenticationService: AuthenticationService,
       private userService: UserService,
       private user: UserService
     ) {
-      this.user.allUsers();
+      this.user.subscribeToNewUsers();
       this.currentUser = this.authenticationService.currentUserValue;
     }
 
     async ngOnInit() {
-      this.userList = this.user.userList;
+      this.user.users.subscribe(user => {
+        console.log(user.data.User)
+        this.userList = user.data.User;
+      });
     }
 
     async deleteUser(id) {

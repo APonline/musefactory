@@ -100,7 +100,7 @@ export class AppModule {
     );
 
     // Clean types, removes __typename
-    const cleanTypeName = new ApolloLink((operation, forward) => {
+    /*const cleanTypeName = new ApolloLink((operation, forward) => {
       if (operation.variables) {
         const omitTypename = (key, value) => {
           return key === '__typename' ? undefined : value;
@@ -110,11 +110,10 @@ export class AppModule {
       return forward(operation).map((data) => {
         return data;
       });
-    });
+    });*/
 
     // Create clean Link
     const httpLinkWithErrorHandling = ApolloLink.from([
-      cleanTypeName,
       splitLink
     ]);
     apollo.create({

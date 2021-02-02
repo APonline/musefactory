@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Apollo } from 'apollo-angular';
+import { Apollo, QueryRef } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { map, tap } from 'rxjs/operators';
 import { User } from '../types/user';
@@ -9,28 +9,21 @@ import { interval, Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import {Observable} from 'rxjs';
 
-const COMMENTS_SUBSCRIPTION = gql`
-  subscription allUsers {
-    User {
-      _id
-      name
-      username
-      firstname
-      lastname
-      password
-      email
+const ALL_USERS_SUB = gql`
+  subscription onAllUsers {
+    allUsers {
+        _id
+        name
+        username
+        firstname
+        lastname
+        password
+        email
     }
   }
 `;
 
-
-
-@Injectable({ providedIn: 'root' })
-export class UserService {
-  userList: Observable<User[]>;
-  allUsersList = [];
-
-  public ALL_USERS = gql`
+const ALL_USERS_QUERY = gql`
     query allUsers {
       User {
         _id
@@ -46,9 +39,19 @@ export class UserService {
 
 
 
+@Injectable({ providedIn: 'root' })
+export class UserService {
+
+  userListQuery: QueryRef<any>;
+  users: Observable<any>;
 
     constructor(private apollo: Apollo) {
+      this.userListQuery = this.apollo.watchQuery({
+        query: ALL_USERS_QUERY,
+        notifyOnNetworkStatusChange: true
+      });
 
+      this.users = this.userListQuery.valueChanges;
     }
 
     register(userProfile: User) {
@@ -78,7 +81,7 @@ export class UserService {
           user
         },
         refetchQueries: [{
-          query: this.ALL_USERS
+          query: ALL_USERS_QUERY
         }]
       })
       .subscribe(() => {
@@ -86,18 +89,24 @@ export class UserService {
       });
     }
 
-    allUsers() {
-      this.userList = this.apollo.watchQuery({
-        query: this.ALL_USERS,
-        notifyOnNetworkStatusChange: true
-      })
-      .valueChanges
-      .pipe(
-        map((result: any) => {
-          console.log(result.data.User);
-          return result.data.User;
-        })
-      )
+    subscribeToNewUsers() {
+      this.userListQuery.subscribeToMore({
+        document: ALL_USERS_SUB,
+        updateQuery: (prev, {subscriptionData}) => {
+          if (!subscriptionData.data) {
+            return prev;
+          }
+
+          const newUserItem = subscriptionData.data.allUsers;
+
+          return {
+            ...prev,
+            entry: {
+              users: [newUserItem, ...prev.entry.users]
+            }
+          };
+        }
+      });
     }
 
     delete(id) {
@@ -121,16 +130,4 @@ export class UserService {
         map(result => result.data)
       ).toPromise();
     }
-
-    /*getAll() {
-        return this.http.get<User[]>(`${process.env.apiUrl}/users`);
-    }
-
-    register(user: User) {
-        return this.http.post(`${process.env.apiUrl}/users/register`, user);
-    }
-
-    delete(id: number) {
-        return this.http.delete(`${process.env.apiUrl}/users/${id}`);
-    }*/
 }
