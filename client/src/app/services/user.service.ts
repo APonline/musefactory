@@ -1,24 +1,42 @@
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { User } from '../types/user';
 import { Mutation } from '../types/mutations'
 import { Query } from '../types/query'
-import { Subject } from 'rxjs';
+import { interval, Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import {Observable} from 'rxjs';
+
+
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   //userList = new Subject<User[]>();
+  //userList: Observable<any>;
   //userList: Subscription;
   userList: Observable<User[]>;
-
   allUsersList = [];
 
+  public ALL_USERS = gql`
+  query allUsers {
+    User {
+      _id
+      name
+      username
+      firstname
+      lastname
+      password
+      email
+    }
+  }
+  `;
 
-    constructor(private apollo: Apollo) { }
+
+    constructor(private apollo: Apollo) {
+
+    }
 
     register(userProfile: User) {
       const user = {
@@ -29,7 +47,7 @@ export class UserService {
         password: userProfile.password
       };
 
-      return this.apollo.mutate<Mutation>({
+      this.apollo.mutate<Mutation>({
         mutation: gql`
           mutation MergeUser(
             $user: UserInput
@@ -45,35 +63,28 @@ export class UserService {
         `,
         variables: {
           user
-        }
-      }).pipe(
-        map(result => result.data)
-      ).toPromise();
+        },
+        refetchQueries: [{
+          query: this.ALL_USERS
+        }]
+      })
+      .subscribe(() => {
+        console.log('new user');
+      });
     }
 
     allUsers() {
-      return this.apollo.watchQuery<Query>({
-        fetchPolicy: "network-only",
-        pollInterval: 500,
-        query: gql`
-          query allUsers {
-            User {
-              _id
-              name
-              username
-              firstname
-              lastname
-              password
-              email
-            }
-          }
-          `,
-          notifyOnNetworkStatusChange: false
+      this.userList = this.apollo.watchQuery({
+        query: this.ALL_USERS,
+        notifyOnNetworkStatusChange: true
       })
       .valueChanges
       .pipe(
-        map(({data}) => data.User),
-      );
+        map((result: any) => {
+          console.log(result.data.User);
+          return result.data.User;
+        })
+      )
     }
 
     delete(id) {
