@@ -14,13 +14,6 @@ import {MatSelectInfiniteScrollModule} from 'ng-mat-select-infinite-scroll';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import {
-  MatSnackBarModule,
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatButtonToggleModule,
-  MatDividerModule,
-  MatProgressBarModule } from '@angular/material';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -29,22 +22,16 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
-import { MccColorPickerModule } from 'material-community-components';
 import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   imports: [
-    MccColorPickerModule.forRoot({
-      empty_color: 'transparent',
-      used_colors: ['#000000', '#FFF555']
-    })
   ],
   exports: [
     MatInputModule,
     MatIconModule,
     MatCardModule,
     MatButtonModule,
-    MatButtonToggleModule,
     MatToolbarModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
@@ -57,9 +44,6 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatCheckboxModule,
     MatSelectModule,
     MatSelectInfiniteScrollModule,
-    MatSnackBarModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     MatGridListModule,
     MatSidenavModule,
     MatTooltipModule,
@@ -68,10 +52,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatTreeModule,
     MatAutocompleteModule,
     MatChipsModule,
-    MatDividerModule,
-    MccColorPickerModule,
     MatBadgeModule,
-    MatProgressBarModule
   ]
 })
 export class AngularMaterialModule { }

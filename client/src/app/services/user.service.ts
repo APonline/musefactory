@@ -9,18 +9,8 @@ import { interval, Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import {Observable} from 'rxjs';
 
-
-
-@Injectable({ providedIn: 'root' })
-export class UserService {
-  //userList = new Subject<User[]>();
-  //userList: Observable<any>;
-  //userList: Subscription;
-  userList: Observable<User[]>;
-  allUsersList = [];
-
-  public ALL_USERS = gql`
-  query allUsers {
+const COMMENTS_SUBSCRIPTION = gql`
+  subscription allUsers {
     User {
       _id
       name
@@ -31,7 +21,30 @@ export class UserService {
       email
     }
   }
+`;
+
+
+
+@Injectable({ providedIn: 'root' })
+export class UserService {
+  userList: Observable<User[]>;
+  allUsersList = [];
+
+  public ALL_USERS = gql`
+    query allUsers {
+      User {
+        _id
+        name
+        username
+        firstname
+        lastname
+        password
+        email
+      }
+    }
   `;
+
+
 
 
     constructor(private apollo: Apollo) {

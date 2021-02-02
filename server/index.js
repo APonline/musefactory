@@ -1,11 +1,19 @@
 import typeDefs from './graphql-schema';
-import resolvers from './resolvers';
-import { ApolloServer } from 'apollo-server';
+import resolvers from './API/resolvers';
+import express from 'express';
+import bodyParser from 'body-parser';
+import { createServer } from 'http';
+import { ApolloServer, gql }  from 'apollo-server-express';
 import { makeAugmentedSchema } from 'neo4j-graphql-js';
 import { v1 as neo4j } from 'neo4j-driver';
+import { execute, subscribe } from 'graphql';
+import { PubSub } from 'graphql-subscriptions';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 
 import dotenv from 'dotenv';
 dotenv.config();
+
+const pubsub = new PubSub();
 
 const schema = makeAugmentedSchema({
     typeDefs,
@@ -20,7 +28,11 @@ const driver = neo4j.driver(
     { encrypted: "ENCRYPTION_OFF"}
 );
 
-const server = new ApolloServer({
+const app = express();
+
+app.use('/graphql', bodyParser.json());
+
+const apolloServer = new ApolloServer({
     context: { driver },
     schema: schema,
     uploads: {
@@ -28,7 +40,19 @@ const server = new ApolloServer({
         maxFiles: 20,
     }
 });
+apolloServer.applyMiddleware({ app });
 
-server.listen(process.env.GRAPHQL_LISTEN_PORT, `0.0.0.0`).then(({ url }) => {
-    console.log(`GraphQL API ready at ${url}`)
-});
+const server = createServer(app);
+
+
+server.listen(process.env.GRAPHQL_LISTEN_PORT, `0.0.0.0`, () => {
+        new SubscriptionServer({
+            execute,
+            subscribe,
+            schema,
+        }, {
+            server: server,
+            path: '/subscriptions',
+        });
+    });
+

@@ -9,14 +9,15 @@ import { AngularMaterialModule } from './angular-material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // used to create fake backend
-import { fakeBackendProvider } from './helpers/fake-backend';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 import { JwtInterceptor } from './helpers/jwt.interceptors';
 
 // Apollo
+import { getMainDefinition } from 'apollo-utilities';
+import { WebSocketLink } from 'apollo-link-ws';
 import { ApolloModule, Apollo } from 'apollo-angular';
-import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
-import { ApolloLink } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
+import { ApolloLink, split } from 'apollo-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
 //services
@@ -35,6 +36,7 @@ import { MainNavComponent } from './components/navigation/mainNav/mainNav.compon
 
 
 
+
 @NgModule({
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   declarations: [
@@ -48,20 +50,16 @@ import { MainNavComponent } from './components/navigation/mainNav/mainNav.compon
   ],
   imports: [
     BrowserModule,
-    HttpLinkModule,
-    ApolloModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
     AngularMaterialModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ApolloModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
-    // provider used to create fake backend
-    //fakeBackendProvider,
     AlertService,
     AuthenticationService,
     UserService
@@ -69,8 +67,39 @@ import { MainNavComponent } from './components/navigation/mainNav/mainNav.compon
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(apollo: Apollo, httpLink: HttpLink) {
+  constructor(apollo: Apollo) {
 
+    // HTTP for API
+    const httpLink = new HttpLink({
+      uri: `${environment.apiUrl}`,
+    });
+
+    // WS for subscription
+    const wsLink = new WebSocketLink({
+      uri: `${environment.apiSubUrl}`,
+      options: {
+        reconnect: true
+      }
+    });
+
+    // The split function takes three parameters:
+    //
+    // * A function that's called for each operation to execute
+    // * The Link to use for an operation if the function returns a "truthy" value
+    // * The Link to use for an operation if the function returns a "falsy" value
+    const splitLink = split(
+      ({ query }) => {
+        const definition = getMainDefinition(query);
+        return (
+          definition.kind === 'OperationDefinition' &&
+          definition.operation === 'subscription'
+        );
+      },
+      wsLink,
+      httpLink,
+    );
+
+    // Clean types, removes __typename
     const cleanTypeName = new ApolloLink((operation, forward) => {
       if (operation.variables) {
         const omitTypename = (key, value) => {
@@ -83,9 +112,10 @@ export class AppModule {
       });
     });
 
+    // Create clean Link
     const httpLinkWithErrorHandling = ApolloLink.from([
       cleanTypeName,
-      httpLink.create({ uri: `${environment.apiUrl}`})
+      splitLink
     ]);
     apollo.create({
       link: httpLinkWithErrorHandling,

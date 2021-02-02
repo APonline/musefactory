@@ -43,6 +43,7 @@
     "neo4j-graphql-js": "^2.17.1",
     "neomongoose": "^0.1.1",
     "node-fetch": "^2.6.1",
+    "subscriptions-transport-ws": "^0.9.18",
     "uuid": "^3.2.1"
   },
   "resolutions": {
