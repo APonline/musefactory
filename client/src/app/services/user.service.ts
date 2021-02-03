@@ -71,9 +71,12 @@ export class UserService {
             MergeUser(
               user: $user
             ) {
-              _id
+              name
               username
+              firstname
+              lastname
               password
+              email
             }
           }
         `,
@@ -84,8 +87,38 @@ export class UserService {
           query: ALL_USERS_QUERY
         }]
       })
-      .subscribe(() => {
+      .subscribe((user) => {
         console.log('new user');
+        this.registerSub(user.data.MergeUser);
+      });
+    }
+
+    registerSub(user) {
+      console.log(user);
+
+      this.apollo.mutate<Mutation>({
+        mutation: gql`
+          mutation MergeUserSub(
+            $user: UserInput
+          ) {
+            MergeUserSub(
+              user: $user
+            ) {
+              name
+              username
+              firstname
+              lastname
+              password
+              email
+            }
+          }
+        `,
+        variables: {
+          user
+        }
+      })
+      .subscribe(() => {
+        console.log('sub new user');
       });
     }
 
@@ -102,7 +135,7 @@ export class UserService {
           return {
             ...prev,
             entry: {
-              users: [newUserItem, ...prev.entry.users]
+              User: [newUserItem, ...prev.entry.User]
             }
           };
         }
@@ -125,7 +158,10 @@ export class UserService {
         `,
         variables: {
           id
-        }
+        },
+        refetchQueries: [{
+          query: ALL_USERS_QUERY
+        }]
       }).pipe(
         map(result => result.data)
       ).toPromise();

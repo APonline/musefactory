@@ -1,3 +1,5 @@
+MergeUserSub(user: UserInput): User
+
 MergeUser(user: UserInput): User
     @cypher (
         statement: """

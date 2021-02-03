@@ -33,7 +33,7 @@ const app = express();
 app.use('/graphql', bodyParser.json());
 
 const apolloServer = new ApolloServer({
-    context: { driver },
+    context: {driver},
     schema: schema,
     uploads: {
         maxFieldSize: 1000000000,
@@ -54,5 +54,7 @@ server.listen(process.env.GRAPHQL_LISTEN_PORT, `0.0.0.0`, () => {
             server: server,
             path: '/subscriptions',
         });
+
+        console.log(`GraphQL API ready at ${process.env.GRAPHQL_LISTEN_PORT}`);
     });
 

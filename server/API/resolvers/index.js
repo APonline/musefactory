@@ -2,6 +2,9 @@ import user from './user';
 import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json';
 import { createWriteStream } from 'fs';
 import "regenerator-runtime/runtime.js";
+import { PubSub } from 'graphql-subscriptions';
+
+const pubsub = new PubSub();
 
 const storeUpload = async ({ stream, newName, filename, mimetype }) => {
     const path = `uploads/${newName}`;
@@ -24,6 +27,8 @@ const processUpload = async (newName, upload) => {
     return file;
 };
 
+const USER_ADDED = 'USER_ADDED';
+
 export default {
     User: user,
     JSON: GraphQLJSON,
@@ -32,6 +37,17 @@ export default {
         uploadFile: async (_, { newName, file }) => {
             const upload = await processUpload(newName, file);
             return upload;
+        },
+
+        MergeUserSub: async (_, {user}) => {
+            console.log(user)
+            pubsub.publish(USER_ADDED, { allUsers: user});
+            return user;
         }
-    }
+    },
+    Subscription: {
+        allUsers: {
+            subscribe: () => pubsub.asyncIterator([USER_ADDED]),
+        },
+    },
 }
