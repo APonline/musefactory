@@ -1,6 +1,7 @@
 import user from './user';
 import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json';
 import { createWriteStream } from 'fs';
+import { neo4jgraphql } from "neo4j-graphql-js";
 import "regenerator-runtime/runtime.js";
 import { PubSub } from 'graphql-subscriptions';
 
@@ -39,15 +40,41 @@ export default {
             return upload;
         },
 
-        MergeUserSub: async (_, {user}) => {
-            console.log(user)
-            pubsub.publish(USER_ADDED, { allUsers: user});
-            return user;
+        MergeUser: async (_, args, {user}) => {
+            console.log(user, args)
+            //pubsub.publish(USER_ADDED, { allUsers: args});
+            return args;
+        },
+
+        /*DeleteUser: async (_, args, {models}) => {
+            pubsub.publish(USER_ADDED, { args });
+            return args;
+        }*/
+        DeleteUser(object, params, ctx, info) {
+             
+            const res = neo4jgraphql(object, params, ctx, info);
+            console.log(res);
+            console.log(params)
+            pubsub.publish(USER_ADDED, { params });
+            return res;
         }
+        /*DeleteUser(id: Int): User
+            @cypher (
+                statement: """
+                    MATCH (u:User)
+                    WHERE id(u)=$id
+
+                    DETACH DELETE u
+                """
+            )*/
+
     },
     Subscription: {
         allUsers: {
-            subscribe: () => pubsub.asyncIterator([USER_ADDED]),
+            subscribe: () => pubsub.asyncIterator(USER_ADDED),
+            resolve: payload => {
+                return payload
+              }
         },
     },
 }

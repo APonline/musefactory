@@ -33,7 +33,14 @@ const app = express();
 app.use('/graphql', bodyParser.json());
 
 const apolloServer = new ApolloServer({
-    context: {driver},
+    context: ({ req }) => {
+        return {
+            ...req,
+            headers: req.headers, 
+            pubsub,
+            driver
+        };
+    },
     schema: schema,
     uploads: {
         maxFieldSize: 1000000000,

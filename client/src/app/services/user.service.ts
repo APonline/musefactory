@@ -89,11 +89,11 @@ export class UserService {
       })
       .subscribe((user) => {
         console.log('new user');
-        this.registerSub(user.data.MergeUser);
+        //this.registerSub(user.data.MergeUser);
       });
     }
 
-    registerSub(user) {
+    /*registerSub(user) {
       console.log(user);
 
       this.apollo.mutate<Mutation>({
@@ -120,7 +120,7 @@ export class UserService {
       .subscribe(() => {
         console.log('sub new user');
       });
-    }
+    }*/
 
     subscribeToNewUsers() {
       this.userListQuery.subscribeToMore({
