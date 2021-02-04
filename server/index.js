@@ -37,7 +37,6 @@ const apolloServer = new ApolloServer({
         return {
             ...req,
             headers: req.headers, 
-            pubsub,
             driver
         };
     },

@@ -5,8 +5,12 @@ import { neo4jgraphql } from "neo4j-graphql-js";
 import "regenerator-runtime/runtime.js";
 import { PubSub } from 'graphql-subscriptions';
 
-const pubsub = new PubSub();
+export const pubsub = new PubSub();
 
+const USER_ADDED = 'USER_ADDED';
+const USER_DELETED = 'USER_DELETED';
+
+// UPLOAD FILE
 const storeUpload = async ({ stream, newName, filename, mimetype }) => {
     const path = `uploads/${newName}`;
 
@@ -27,8 +31,7 @@ const processUpload = async (newName, upload) => {
     const file = await storeUpload({ stream, newName, filename, mimetype });
     return file;
 };
-
-const USER_ADDED = 'USER_ADDED';
+// END FILE UPLOAD
 
 export default {
     User: user,
@@ -40,41 +43,32 @@ export default {
             return upload;
         },
 
-        MergeUser: async (_, args, {user}) => {
-            console.log(user, args)
-            //pubsub.publish(USER_ADDED, { allUsers: args});
-            return args;
+        MergeUser(obj, args, ctx, info) {
+            return neo4jgraphql(obj, args, ctx, info).then( res => {
+                console.log(res);
+                pubsub.publish(USER_ADDED, res );
+            });
         },
 
-        /*DeleteUser: async (_, args, {models}) => {
-            pubsub.publish(USER_ADDED, { args });
-            return args;
-        }*/
-        DeleteUser(object, params, ctx, info) {
-             
-            const res = neo4jgraphql(object, params, ctx, info);
-            console.log(res);
-            console.log(params)
-            pubsub.publish(USER_ADDED, { params });
-            return res;
+        DeleteUser(obj, args, ctx, info) {
+            return neo4jgraphql(obj, args, ctx, info).then( res => {
+                console.log(args);
+                pubsub.publish(USER_DELETED, args );
+            });
         }
-        /*DeleteUser(id: Int): User
-            @cypher (
-                statement: """
-                    MATCH (u:User)
-                    WHERE id(u)=$id
-
-                    DETACH DELETE u
-                """
-            )*/
-
     },
     Subscription: {
-        allUsers: {
+        userAdded: {
             subscribe: () => pubsub.asyncIterator(USER_ADDED),
             resolve: payload => {
                 return payload
-              }
+            }
+        },
+        userDeleted: {
+            subscribe: () => pubsub.asyncIterator(USER_DELETED),
+            resolve: payload => {
+                return payload
+            }
         },
     },
 }

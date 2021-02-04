@@ -9,16 +9,22 @@ import { interval, Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import {Observable} from 'rxjs';
 
-const ALL_USERS_SUB = gql`
-  subscription onAllUsers {
-    allUsers {
-        _id
+const USER_ADDED = gql`
+  subscription userAdded {
+    userAdded {
         name
         username
         firstname
         lastname
         password
         email
+    }
+  }
+`;
+const USER_DELETED = gql`
+  subscription userDeleted {
+    userDeleted {
+      id
     }
   }
 `;
@@ -89,56 +95,6 @@ export class UserService {
       })
       .subscribe((user) => {
         console.log('new user');
-        //this.registerSub(user.data.MergeUser);
-      });
-    }
-
-    /*registerSub(user) {
-      console.log(user);
-
-      this.apollo.mutate<Mutation>({
-        mutation: gql`
-          mutation MergeUserSub(
-            $user: UserInput
-          ) {
-            MergeUserSub(
-              user: $user
-            ) {
-              name
-              username
-              firstname
-              lastname
-              password
-              email
-            }
-          }
-        `,
-        variables: {
-          user
-        }
-      })
-      .subscribe(() => {
-        console.log('sub new user');
-      });
-    }*/
-
-    subscribeToNewUsers() {
-      this.userListQuery.subscribeToMore({
-        document: ALL_USERS_SUB,
-        updateQuery: (prev, {subscriptionData}) => {
-          if (!subscriptionData.data) {
-            return prev;
-          }
-
-          const newUserItem = subscriptionData.data.allUsers;
-
-          return {
-            ...prev,
-            entry: {
-              User: [newUserItem, ...prev.entry.User]
-            }
-          };
-        }
       });
     }
 
@@ -165,5 +121,43 @@ export class UserService {
       }).pipe(
         map(result => result.data)
       ).toPromise();
+    }
+
+
+
+    subscribeToNewUsers() {
+      this.userListQuery.subscribeToMore({
+        document: USER_ADDED,
+        updateQuery: (prev, {subscriptionData}) => {
+          if (!subscriptionData.data) {
+            return prev;
+          }
+
+          const newUserItem = subscriptionData.data.userAdded;
+          console.log(prev, subscriptionData);
+          return {
+            ...prev,
+            User: [newUserItem, ...prev.User]
+          };
+        }
+      });
+    }
+
+    subscribeToUsers() {
+      this.userListQuery.subscribeToMore({
+        document: USER_DELETED,
+        updateQuery: (prev, {subscriptionData}) => {
+          if (!subscriptionData.data) {
+            return prev;
+          }
+
+          const newUserItem = subscriptionData.data.userDeleted;
+
+          return {
+            ...prev,
+            User: [newUserItem, ...prev.User]
+          };
+        }
+      });
     }
 }

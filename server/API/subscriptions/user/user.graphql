@@ -1,1 +1,2 @@
-allUsers: User
+userAdded: User
+userDeleted: User
