@@ -33,23 +33,26 @@ export class AuthenticationService {
         query: gql`
           query Login($username: String, $password: String) {
             Login(username: $username, password: $password) {
-              name,
-              username,
-              firstname,
-              lastname,
-              password,
+              id
+              name
+              username
+              firstname
+              lastname
+              password
               email
+              dateCreated {
+                formatted
+              }
+              active
             }
           }
         `,
         variables
       }).pipe(
         map(result => {
-          let user = result.data.Login;
-          // store user details and jwt token in local storage to keep user logged in between page refreshes
+          const user = result.data.Login;
           localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
-          console.log(this.currentUserSubject.value)
           return user;
         })
       ).toPromise();

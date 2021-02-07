@@ -43,32 +43,32 @@ export default {
             return upload;
         },
 
-        MergeUser(obj, args, ctx, info) {
+        CreateUser(obj, args, ctx, info) {
             return neo4jgraphql(obj, args, ctx, info).then( res => {
-                console.log(res);
-                pubsub.publish(USER_ADDED, res );
+                pubsub.publish(USER_ADDED, { 
+                    mutation: 'CREATED',
+                    data: res,
+                    previousValues: null
+                });
             });
         },
 
         DeleteUser(obj, args, ctx, info) {
-            return neo4jgraphql(obj, args, ctx, info).then( res => {
-                console.log(args);
-                pubsub.publish(USER_DELETED, args );
+            return neo4jgraphql(obj, args, ctx, info).then( res => {    
+                pubsub.publish(USER_DELETED, { 
+                    mutation: 'DELETED',
+                    data: args.user,
+                    previousValues: args.user
+                });
             });
         }
     },
     Subscription: {
-        userAdded: {
-            subscribe: () => pubsub.asyncIterator(USER_ADDED),
-            resolve: payload => {
+        usersChange: {
+            subscribe: () => pubsub.asyncIterator([USER_ADDED, USER_DELETED]),
+            resolve: (payload, args, ctx, info) => {
                 return payload
             }
-        },
-        userDeleted: {
-            subscribe: () => pubsub.asyncIterator(USER_DELETED),
-            resolve: payload => {
-                return payload
-            }
-        },
+        }
     },
 }

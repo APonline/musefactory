@@ -4,27 +4,14 @@ import gql from 'graphql-tag';
 import { map, tap } from 'rxjs/operators';
 import { User } from '../types/user';
 import { Mutation } from '../types/mutations'
-import { Query } from '../types/query'
-import { interval, Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
 import {Observable} from 'rxjs';
 
-const USER_ADDED = gql`
-  subscription userAdded {
-    userAdded {
-        name
-        username
-        firstname
-        lastname
-        password
-        email
-    }
-  }
-`;
-const USER_DELETED = gql`
-  subscription userDeleted {
-    userDeleted {
-      id
+const USER_SUB = gql`
+  subscription onUsersChange {
+    usersChange {
+      mutation
+      data
+      previousValues
     }
   }
 `;
@@ -32,7 +19,7 @@ const USER_DELETED = gql`
 const ALL_USERS_QUERY = gql`
     query allUsers {
       User {
-        _id
+        id
         name
         username
         firstname
@@ -54,6 +41,7 @@ export class UserService {
     constructor(private apollo: Apollo) {
       this.userListQuery = this.apollo.watchQuery({
         query: ALL_USERS_QUERY,
+        fetchPolicy: 'network-only',
         notifyOnNetworkStatusChange: true
       });
 
@@ -71,53 +59,49 @@ export class UserService {
 
       this.apollo.mutate<Mutation>({
         mutation: gql`
-          mutation MergeUser(
+          mutation CreateUser(
             $user: UserInput
           ) {
-            MergeUser(
+            CreateUser(
               user: $user
             ) {
+              id
               name
               username
               firstname
               lastname
               password
               email
+              dateCreated {
+                formatted
+              }
+              active
             }
           }
         `,
         variables: {
           user
-        },
-        refetchQueries: [{
-          query: ALL_USERS_QUERY
-        }]
+        }
       })
-      .subscribe((user) => {
-        console.log('new user');
-      });
+      .subscribe();
     }
 
-    delete(id) {
+    delete(user) {
       return this.apollo.mutate<Mutation>({
         mutation: gql`
           mutation DeleteUser(
-            $id: Int
+            $user: UserInput
           ) {
             DeleteUser(
-              id: $id
+              user: $user
             ) {
-              _id
-              username
+              id
             }
           }
         `,
         variables: {
-          id
-        },
-        refetchQueries: [{
-          query: ALL_USERS_QUERY
-        }]
+          user
+        }
       }).pipe(
         map(result => result.data)
       ).toPromise();
@@ -125,39 +109,31 @@ export class UserService {
 
 
 
-    subscribeToNewUsers() {
-      this.userListQuery.subscribeToMore({
-        document: USER_ADDED,
-        updateQuery: (prev, {subscriptionData}) => {
-          if (!subscriptionData.data) {
-            return prev;
-          }
-
-          const newUserItem = subscriptionData.data.userAdded;
-          console.log(prev, subscriptionData);
-          return {
-            ...prev,
-            User: [newUserItem, ...prev.User]
-          };
-        }
-      });
-    }
-
     subscribeToUsers() {
       this.userListQuery.subscribeToMore({
-        document: USER_DELETED,
+        document: USER_SUB,
         updateQuery: (prev, {subscriptionData}) => {
-          if (!subscriptionData.data) {
-            return prev;
+          const newUserItem = subscriptionData.data.usersChange.data;
+          const mutationType = subscriptionData.data.usersChange.mutation;
+          let updatedValues;
+
+          if (mutationType === 'CREATED') {
+            updatedValues = {
+              ...prev,
+              User: [...prev.User, newUserItem]
+            };
           }
 
-          const newUserItem = subscriptionData.data.userDeleted;
+          if (mutationType === 'DELETED') {
+            updatedValues = {
+              ...prev,
+              User: prev.User.filter(user => user.id !== subscriptionData.data.usersChange.previousValues.id)
+            };
+          }
 
-          return {
-            ...prev,
-            User: [newUserItem, ...prev.User]
-          };
-        }
+          return updatedValues;
+        },
+        onError: (err) => console.error(err),
       });
     }
 }

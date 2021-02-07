@@ -1,2 +1,2 @@
-userAdded: User
-userDeleted: User
+usersChange: SubscriptionPayload
+userDeleted: SubscriptionPayload

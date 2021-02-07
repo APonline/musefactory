@@ -1,20 +1,24 @@
 
-MergeUser(user: UserInput): User
+CreateUser(user: UserInput): User
     @cypher (
         statement: """
-            MERGE (u:User {username: $user.username, name: $user.firstname + ' ' + $user.lastname})
-            ON CREATE SET u.dateCreated = datetime.transaction()
+            WITH apoc.create.uuid() as i, datetime.transaction() as d
+            CREATE (u:User {
+                id: i,
+                name: $user.firstname + ' ' + $user.lastname,
+                dateCreated: d,
+                active: 1
+            })
             SET u += $user
 
             RETURN u as User
         """
     )
 
-DeleteUser(id: Int): User
+DeleteUser(user: UserInput): User
     @cypher (
         statement: """
-            MATCH (u:User)
-            WHERE id(u)=$id
+            MATCH (u:User {id: $user.id})
 
             DETACH DELETE u
         """

@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
       private userService: UserService,
       private user: UserService
     ) {
-      this.user.subscribeToNewUsers();
+      this.user.subscribeToUsers();
       this.currentUser = this.authenticationService.currentUserValue;
     }
 
@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
       });
     }
 
-    async deleteUser(id) {
-      await this.userService.delete(parseInt(id));
+    async deleteUser(user) {
+      await this.userService.delete(user);
     }
 }

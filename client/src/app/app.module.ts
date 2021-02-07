@@ -17,10 +17,11 @@ import { getMainDefinition } from 'apollo-utilities';
 import { WebSocketLink } from 'apollo-link-ws';
 import { ApolloModule, Apollo } from 'apollo-angular';
 import { HttpLink } from 'apollo-link-http';
-import { ApolloLink, split } from 'apollo-link';
+import { ApolloLink, split, execute } from 'apollo-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { parse } from 'graphql';
 
-//services
+// Services
 import { AlertService } from './services/alert.service';
 import { AuthenticationService } from './services/authentication.service';
 import { UserService } from './services/user.service';
@@ -33,8 +34,6 @@ import { RegisterComponent } from './components/register/register.component';
 import { AlertComponent } from './components/alert/alert.component';
 import { LandingComponent } from './containers/landing/landing.component';
 import { MainNavComponent } from './components/navigation/mainNav/mainNav.component';
-
-
 
 
 @NgModule({
@@ -89,7 +88,8 @@ export class AppModule {
     // * The Link to use for an operation if the function returns a "falsy" value
     const splitLink = split(
       ({ query }) => {
-        const definition = getMainDefinition(query);
+        let definition = getMainDefinition(query);
+
         return (
           definition.kind === 'OperationDefinition' &&
           definition.operation === 'subscription'
@@ -99,21 +99,19 @@ export class AppModule {
       httpLink,
     );
 
-    // Clean types, removes __typename
-    /*const cleanTypeName = new ApolloLink((operation, forward) => {
-      if (operation.variables) {
-        const omitTypename = (key, value) => {
-          return key === '__typename' ? undefined : value;
-        };
-      }
 
-      return forward(operation).map((data) => {
-        return data;
-      });
-    });*/
+    const namedLink = new ApolloLink((operation, forward) => {
+      operation.setContext(() => ({
+          uri: `${environment.apiUrl}?${operation.operationName}`,
+        })
+      );
+      return forward ? forward(operation) : null;
+    });
+
 
     // Create clean Link
     const httpLinkWithErrorHandling = ApolloLink.from([
+      namedLink,
       splitLink
     ]);
     apollo.create({

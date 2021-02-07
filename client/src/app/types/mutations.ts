@@ -2,7 +2,7 @@ import { User } from './user';
 
 
 export interface Mutation {
-  MergeUser: User;
+  CreateUser: User;
   DeleteUser: User;
   UploadFiles?: any[];
   UploadFile?: any[];

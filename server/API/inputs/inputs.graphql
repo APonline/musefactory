@@ -1,4 +1,5 @@
 input UserInput {
+  id: String
   name: String
   username: String
   firstname: String
