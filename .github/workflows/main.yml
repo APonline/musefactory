@@ -41,7 +41,6 @@ jobs:
           cd client/
           npm i
           npm run build:production
-          working-directory: /var/www/html/
 
       - name: Push Build to Releases
         uses: ncipollo/release-action@v1
