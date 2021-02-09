@@ -16,6 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
+      - name: set NOW
+        run: |
+          echo "::set-env name=NOW::$(date +'%Y-%m-%dT%H:%M:%S')"
+
       - name: Cache node modules
         uses: actions/cache@v1
         with:
@@ -36,4 +40,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: 'client/dist/angular-githubaction/*'
+          tag: ${{ env.NOW }}
           token: ${{ secrets.TOKEN }}
