@@ -1,9 +1,4 @@
-on:
-  push:
-    branches:
-      - master
-    tags:
-      - '*'
+on: push
 
 name: Build Muse Factory
 jobs:
@@ -15,10 +10,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-
-      - name: set NOW
-        run: |
-          echo "client/src/environments" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Cache node modules
         uses: actions/cache@v1
@@ -40,5 +31,4 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: 'client/dist/angular-githubaction/*'
-          tag: ${{ env.version }}
           token: ${{ secrets.TOKEN }}
