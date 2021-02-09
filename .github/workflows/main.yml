@@ -1,5 +1,10 @@
-on: push
-name: Build Angular
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+name: Build Muse Factory
 jobs:
   build:
     runs-on: ubuntu-latest
