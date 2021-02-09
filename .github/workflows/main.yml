@@ -18,7 +18,7 @@ jobs:
 
       - name: set NOW
         run: |
-          echo "::set-env name=NOW::$(date +'%Y-%m-%dT%H:%M:%S')"
+          echo "client/src/environments" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Cache node modules
         uses: actions/cache@v1
@@ -40,5 +40,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: 'client/dist/angular-githubaction/*'
-          tag: ${{ env.NOW }}
+          tag: ${{ env.version }}
           token: ${{ secrets.TOKEN }}
