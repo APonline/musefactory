@@ -1,4 +1,7 @@
-on: push
+on:
+  push:
+    tags:
+      - '*'
 
 name: Build Muse Factory
 jobs:
@@ -32,5 +35,6 @@ jobs:
       - name: Push Build to Releases
         uses: ncipollo/release-action@v1
         with:
+          fetch-depth: 0
           artifacts: 'dist/angular-githubaction/*'
           token: ${{ secrets.TOKEN }}
