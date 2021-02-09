@@ -1,4 +1,7 @@
-on: push
+on:
+  push:
+    branches:
+      - master
 
 name: Build Muse Factory
 jobs:
@@ -9,7 +12,7 @@ jobs:
         node-version: [12.x]
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v1
 
       - name: Cache node modules
         uses: actions/cache@v1
