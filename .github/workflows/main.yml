@@ -2,6 +2,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - '*'
 
 name: Build Muse Factory
 jobs:
