@@ -1,12 +1,4 @@
-on:
-  push:
-    branches: [master]
-    tags:
-      - '*'
-  pull_request:
-    branches: [master]
-    tags:
-      - '*'
+on: push
 
 name: Build Muse Factory
 jobs:
