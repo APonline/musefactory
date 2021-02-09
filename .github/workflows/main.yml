@@ -15,14 +15,14 @@ jobs:
       - uses: actions/checkout@master
 
       - name: Cache node modules
-        uses: actions/cache@master
+        uses: actions/cache@v1
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Node ${{ matrix.node-version }}
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - name: npm install and npm run build
@@ -31,7 +31,7 @@ jobs:
           npm i
           npm run build:production
       - name: Push Build to Releases
-        uses: ncipollo/release-action@master
+        uses: ncipollo/release-action@v1
         with:
           artifacts: 'dist/angular-githubaction/*'
           token: ${{ secrets.TOKEN }}
