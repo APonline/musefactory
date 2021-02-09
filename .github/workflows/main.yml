@@ -17,6 +17,8 @@ jobs:
       - name: GitHub Tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v5.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cache node modules
         uses: actions/cache@v1
