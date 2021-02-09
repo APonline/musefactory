@@ -1,7 +1,7 @@
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - master
 
 name: Build Muse Factory
 jobs:
@@ -12,19 +12,17 @@ jobs:
         node-version: [12.x]
 
     steps:
-      - uses: actions/checkout@v1
-      - name: Set env
-        run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+      - uses: actions/checkout@master
 
       - name: Cache node modules
-        uses: actions/cache@v1
+        uses: actions/cache@master
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node-version }}
       - name: npm install and npm run build
@@ -33,7 +31,7 @@ jobs:
           npm i
           npm run build:production
       - name: Push Build to Releases
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@master
         with:
           artifacts: 'dist/angular-githubaction/*'
           token: ${{ secrets.TOKEN }}
