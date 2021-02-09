@@ -32,7 +32,7 @@ jobs:
       - name: npm install and npm run build
         run: |
           npm i
-          npm run build:prod
+          npm run prod
       - name: Push Build to Releases
         uses: ncipollo/release-action@v1
         with:
