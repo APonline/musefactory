@@ -51,7 +51,7 @@ apolloServer.applyMiddleware({ app });
 const server = createServer(app);
 
 
-server.listen(process.env.GRAPHQL_LISTEN_PORT, `0.0.0.0`, () => {
+server.listen(process.env.GRAPHQL_LISTEN_PORT, `0.0.0.0` , () => {
         new SubscriptionServer({
             execute,
             subscribe,
@@ -61,6 +61,6 @@ server.listen(process.env.GRAPHQL_LISTEN_PORT, `0.0.0.0`, () => {
             path: '/subscriptions',
         });
 
-        console.log(`GraphQL API ready at ${process.env.GRAPHQL_LISTEN_PORT}`);
+        console.log(`GraphQL API ready at` + JSON.stringify(server.address()) + `${process.env.GRAPHQL_LISTEN_PORT}`);
     });
 
