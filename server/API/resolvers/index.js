@@ -1,11 +1,15 @@
 import user from './user';
 import GraphQLJSON, { GraphQLJSONObject } from 'graphql-type-json';
 import { createWriteStream } from 'fs';
+import bcrypt from 'bcrypt';
+const jsonwebtoken = require('jsonwebtoken');
 import { neo4jgraphql } from "neo4j-graphql-js";
 import "regenerator-runtime/runtime.js";
 import { PubSub } from 'graphql-subscriptions';
 
 export const pubsub = new PubSub();
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const USER_ADDED = 'USER_ADDED';
 const USER_DELETED = 'USER_DELETED';
@@ -33,33 +37,60 @@ const processUpload = async (newName, upload) => {
 };
 // END FILE UPLOAD
 
+
 export default {
     User: user,
     JSON: GraphQLJSON,
     JSONObject: GraphQLJSONObject,
+    Query: {
+        async Login(obj, args, ctx, info) {
+
+            let user = await neo4jgraphql(obj, args, ctx, info);
+
+            if (!user) {
+                throw new Error("Email does not exist");
+            }
+
+            const isValid = await bcrypt.compare(args.password, user.password);
+            if (!isValid) {
+                throw new Error("Incorrect password");
+            }
+
+            user.token = jsonwebtoken.sign(
+                { id: user.id, email: user.email },
+                JWT_SECRET || "ilikemusefactory",
+                { expiresIn: '1d' }
+            );
+
+            return user;
+        }
+    },
     Mutation: {
         uploadFile: async (_, { newName, file }) => {
             const upload = await processUpload(newName, file);
             return upload;
         },
 
-        CreateUser(obj, args, ctx, info) {
-            return neo4jgraphql(obj, args, ctx, info).then( res => {
-                pubsub.publish(USER_ADDED, { 
+        async CreateUser(obj, args, ctx, info) {
+            args.user.password = await bcrypt.hash(args.user.password, 12);
+            return neo4jgraphql(obj, args, ctx, info).then(res => {
+                pubsub.publish(USER_ADDED, {
                     mutation: 'CREATED',
                     data: res,
                     previousValues: null
                 });
+                return res;
             });
         },
 
         DeleteUser(obj, args, ctx, info) {
-            return neo4jgraphql(obj, args, ctx, info).then( res => {    
-                pubsub.publish(USER_DELETED, { 
+            return neo4jgraphql(obj, args, ctx, info).then(res => {
+                pubsub.publish(USER_DELETED, {
                     mutation: 'DELETED',
                     data: args.user,
                     previousValues: args.user
                 });
+                return args.user;
             });
         }
     },

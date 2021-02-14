@@ -5,11 +5,11 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'app-signup',
+  templateUrl: 'signup.component.html',
+  styleUrls: ['signup.component.scss']
 })
-export class HomeContainer implements OnInit {
+export class SignupContainer implements OnInit {
   currentUser: User;
   userList: any[];
 

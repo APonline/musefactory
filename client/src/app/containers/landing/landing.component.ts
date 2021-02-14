@@ -7,7 +7,7 @@ import { AuthenticationService } from '../../services/authentication.service';
   templateUrl: 'landing.component.html',
   styleUrls: ['./landing.component.scss']
  })
-export class LandingComponent implements OnInit {
+export class LandingContainer implements OnInit {
 
     constructor(
         private router: Router,

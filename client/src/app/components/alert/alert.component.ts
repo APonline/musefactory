@@ -10,28 +10,35 @@ import { AlertService } from '../../services/alert.service';
 })
 
 export class AlertComponent implements OnInit, OnDestroy {
-    private subscription: Subscription;
-    message: any;
+  private subscription: Subscription;
+  message: any;
+  alertContainer: any;
 
-    constructor(private alertService: AlertService) { }
+  constructor(private alertService: AlertService) { }
 
-    ngOnInit() {
-        this.subscription = this.alertService.getAlert()
-            .subscribe(message => {
-                switch (message && message.type) {
-                    case 'success':
-                        message.cssClass = 'alert alert-success';
-                        break;
-                    case 'error':
-                        message.cssClass = 'alert alert-danger';
-                        break;
-                }
+  ngOnInit() {
+    this.alertContainer = document.getElementById('alertMsg');
+    this.subscription = this.alertService.getAlert()
+      .subscribe(message => {
+        switch (message && message.type) {
+          case 'success':
+            message.cssClass = 'alert alert-success';
+            break;
+          case 'error':
+            message.cssClass = 'alert alert-danger';
+            break;
+        }
 
-                this.message = message;
-            });
-    }
+        this.message = message;
+        this.alertContainer.classList.add('alert');
 
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
-    }
+        setTimeout(() => {
+          this.alertContainer.classList.remove('alert');
+        }, 5000);
+      });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }

@@ -28,21 +28,23 @@ import { UserService } from './services/user.service';
 
 // Components
 import { AppComponent } from './app.component';
-import { HomeComponent } from './containers/home/home.component';
+import { HomeContainer } from './containers/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AlertComponent } from './components/alert/alert.component';
-import { LandingComponent } from './containers/landing/landing.component';
+import { LandingContainer} from './containers/landing/landing.component';
 import { MainNavComponent } from './components/navigation/mainNav/mainNav.component';
+import { SignupContainer } from './containers/signup/signup.component';
 
 
 @NgModule({
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   declarations: [
     AppComponent,
-    HomeComponent,
-    LandingComponent,
+    HomeContainer,
+    LandingContainer,
     LoginComponent,
+    SignupContainer,
     RegisterComponent,
     AlertComponent,
     MainNavComponent,
