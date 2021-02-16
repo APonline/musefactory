@@ -6,6 +6,7 @@ const jsonwebtoken = require('jsonwebtoken');
 import { neo4jgraphql } from "neo4j-graphql-js";
 import "regenerator-runtime/runtime.js";
 import { PubSub } from 'graphql-subscriptions';
+import sendMailOut from '../../mailserver';
 
 export const pubsub = new PubSub();
 
@@ -73,6 +74,10 @@ export default {
 
         async CreateUser(obj, args, ctx, info) {
             args.user.password = await bcrypt.hash(args.user.password, 12);
+
+            // sendmail
+            sendMailOut(args.user.email, 'User Registered!', 'Welcome to Musefactory!', '<h1>WELCOME MO FUCKA</h1>');
+
             return neo4jgraphql(obj, args, ctx, info).then(res => {
                 pubsub.publish(USER_ADDED, {
                     mutation: 'CREATED',

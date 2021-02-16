@@ -10,26 +10,30 @@ import { execute, subscribe } from 'graphql';
 import { PubSub } from 'graphql-subscriptions';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 
-const jwt = require('express-jwt')
+const jwt = require('express-jwt');
 
 import dotenv from 'dotenv';
 dotenv.config();
 
+
+
+// JWT 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// auth middleware
 const auth = jwt({
     secret: "ilikemusefactory",
     credentialsRequired: false
 });
+// JWT ENDS
 
+
+
+// GRAPHQL NEO4J APOLLO
 const pubsub = new PubSub();
-
 const schema = makeAugmentedSchema({
     typeDefs,
     resolvers
 });
-
 const driver = neo4j.driver(
     process.env.NEO4J_URI || `bolt://127.0.0.1:7687`,
     neo4j.auth.basic(
@@ -37,7 +41,11 @@ const driver = neo4j.driver(
         process.env.NEO4J_PASSWORD || 'neo4j'),
     { encrypted: "ENCRYPTION_OFF" }
 );
+// GRAPHQL NEO4J APOLLO ENDS
 
+
+
+// APP SERVER
 const app = express();
 
 app.use('/graphql', bodyParser.json(), auth);
@@ -57,10 +65,7 @@ const apolloServer = new ApolloServer({
     }
 });
 apolloServer.applyMiddleware({ app });
-
 const server = createServer(app);
-
-
 server.listen(process.env.GRAPHQL_LISTEN_PORT, `0.0.0.0`, () => {
     new SubscriptionServer({
         execute,
@@ -73,4 +78,7 @@ server.listen(process.env.GRAPHQL_LISTEN_PORT, `0.0.0.0`, () => {
 
     console.log(`GraphQL API ready at` + JSON.stringify(server.address()) + `${process.env.GRAPHQL_LISTEN_PORT}`);
 });
+// APP SERVER ENDS
+
+
 
