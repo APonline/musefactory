@@ -14,7 +14,11 @@ mailServer.on("error", err => {
   });
 
 //const toExchange = getMX(parsed.to);
-let transporter = nodemailer.createTransport({sendmail: true},{
+let transporter = nodemailer.createTransport({
+    sendmail: true,
+    newline: 'unix',
+    path: '/usr/sbin/sendmail'
+},{
     from: 'noreply@musefactory.app',
     port: 25,
 });
