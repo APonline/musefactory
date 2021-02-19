@@ -62,6 +62,12 @@ export class PasswordResetComponent implements OnInit {
     this.resetPassForm.controls['id'].setValue(this.currentUser.id);
   }
 
+  // convenience getter for easy access to form fields
+  get f() { return this.resetPassForm.controls; }
+
+  onSubmit() {
+  }
+
   cancel() {
     this.router.navigate(['/user/profile']);
   }
