@@ -7,7 +7,6 @@ import { ApolloServer, gql } from 'apollo-server-express';
 import { makeAugmentedSchema } from 'neo4j-graphql-js';
 import { v1 as neo4j } from 'neo4j-driver';
 import { execute, subscribe } from 'graphql';
-import { PubSub } from 'graphql-subscriptions';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 
 const jwt = require('express-jwt');
@@ -29,7 +28,6 @@ const auth = jwt({
 
 
 // GRAPHQL NEO4J APOLLO
-const pubsub = new PubSub();
 const schema = makeAugmentedSchema({
     typeDefs,
     resolvers

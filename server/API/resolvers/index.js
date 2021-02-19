@@ -10,6 +10,7 @@ import sendMailOut from '../../mailserver';
 import uniqueCredentials from '../../mailTemplates/signup';
 
 export const pubsub = new PubSub();
+pubsub.ee.setMaxListeners(0);
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
