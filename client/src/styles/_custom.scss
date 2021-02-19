@@ -43,6 +43,10 @@
 }
 /*FONTS*/
 
+body {
+  background: #000;
+}
+
 a {
   text-decoration: none;
 }
@@ -96,7 +100,7 @@ ul,
 li,
 p,
 a {
-  font-family: var(--extra-font);
+  font-family: "Reg_lc";
   font-weight: bolder;
 }
 

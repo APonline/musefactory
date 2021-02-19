@@ -42,6 +42,12 @@ jobs:
           npm i
           npm run build
 
+      - name: npm install and run backend
+        run: |
+          cd server/
+          npm i
+          pm2 restart 3
+
       - name: Push Build to Releases
         uses: ncipollo/release-action@v1
         with:

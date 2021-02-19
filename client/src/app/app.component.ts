@@ -10,15 +10,15 @@ import { User } from './types/user';
   animations: [
     trigger('routerAnimation', [
       transition('* <=> *', [
-        query(':enter, :leave', style({ position: 'absolute', left: 0, width: '100%', minHeight: '100%'}), { optional: true }),
+        query(':enter, :leave', style({ position: 'absolute', width: '100vw', left: 0, minHeight: 'calc(100vh - 136px)'}), { optional: true }),
         group([
           query(':enter', [
-            style({ transform: 'translateX(-100%)', opacity: 0 }),
-            animate('0.8s ease-in-out', style({ transform: 'translateX(0%)', opacity: 1 }))
+            style({ opacity: 0 }),
+            animate('1.2s ease-in-out', style({ opacity: 1 }))
           ], { optional: true }),
           query(':leave', [
-            style({ transform: 'translateX(0%)', opacity: 1 }),
-            animate('0.3s ease-in-out', style({ transform: 'translateX(-100%)', opacity: 0 }))
+            style({ opacity: 1 }),
+            animate('0.3s ease-in-out', style({  opacity: 0 }))
           ], { optional: true }),
         ])
       ])

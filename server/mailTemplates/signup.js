@@ -71,7 +71,7 @@ const uniqueCredentials = (verifyId, email, username) => {
                     <br/>
                     <p style='color:#fff!important;'>Verify your account below.</p>
                     <br/>
-                    <a id='verify' href='http://localhost:4200/user/verify?id=${verifyId}&email=${email}&username=${username}'>Verify</a>
+                    <a id='verify' href='https://musefactory.app/user/verify?id=${verifyId}&email=${email}&username=${username}'>Verify</a>
                     <br/>
                     <br/>
                     <br/>

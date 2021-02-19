@@ -15,6 +15,7 @@ export class PasswordResetComponent implements OnInit {
   currentUser: any;
   profile: any;
   loggedIn: boolean;
+  submitted = false;
 
   constructor(
     private router: Router,
@@ -28,7 +29,10 @@ export class PasswordResetComponent implements OnInit {
     let email = this.route.snapshot.paramMap.get('email');
     let myUser = {};
 
-    if (id !== null && id !== undefined) {
+    this.user.subscribeToUsers();
+    this.currentUser = this.authenticationService.currentUserValue;
+
+    if (this.currentUser == null) {
       this.loggedIn = false;
 
       myUser = {
@@ -37,9 +41,6 @@ export class PasswordResetComponent implements OnInit {
       }
     } else {
       this.loggedIn = true;
-
-      this.user.subscribeToUsers();
-      this.currentUser = this.authenticationService.currentUserValue;
 
       myUser = {
         id: this.currentUser.id,
@@ -73,6 +74,7 @@ export class PasswordResetComponent implements OnInit {
   }
 
   changePassword() {
+    this.submitted = true;
     let passOriginal = this.resetPassForm.get('password').value;
     let passConfirm = this.resetPassForm.get('passwordConfirm').value;
 

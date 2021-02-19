@@ -13,9 +13,9 @@ import { User } from 'src/app/types/user';
 })
 export class ProfileComponent implements OnInit {
   currentUser: User;
-  profile: any;
   profileForm: FormGroup;
   editing = 0;
+  userProfile: any;
 
   constructor(
     private router: Router,
@@ -28,10 +28,18 @@ export class ProfileComponent implements OnInit {
     this.user.subscribeToUsers();
     this.currentUser = this.authenticationService.currentUserValue;
 
-    this.getProfile();
+    this.user.users.subscribe(user => {
+      this.currentUser = user.data.User.filter(u => {
+        if (u.email === this.currentUser.email) {
+          return u;
+        }
+      })[0];
+    });
+
   }
 
-  ngOnInit() {
+   ngOnInit() {
+
     this.profileForm = this.formBuilder.group({
       email: ['', Validators.required],
       username: ['', Validators.required],
@@ -43,12 +51,6 @@ export class ProfileComponent implements OnInit {
     this.profileForm.controls['username'].setValue(this.currentUser.username);
     this.profileForm.controls['firstname'].setValue(this.currentUser.firstname);
     this.profileForm.controls['lastname'].setValue(this.currentUser.lastname);
-  }
-
-  async getProfile() {
-    await this.user.getUser(this.currentUser).then((res) => {
-      this.profile = res[0];
-    });
   }
 
   // convenience getter for easy access to form fields
