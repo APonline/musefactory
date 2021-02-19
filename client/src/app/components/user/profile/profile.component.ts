@@ -51,6 +51,12 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  // convenience getter for easy access to form fields
+  get f() { return this.profileForm.controls; }
+
+  onSubmit() {
+  }
+
   editProfile() {
     this.editing = 1;
   }

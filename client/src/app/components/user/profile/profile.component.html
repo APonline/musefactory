@@ -3,7 +3,7 @@
   <mat-card>
     <h2>Profile</h2>
 
-    <form [formGroup]="profileForm">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
 
         <div class="label-value" *ngIf="editing == 0">
