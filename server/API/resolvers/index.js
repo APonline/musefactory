@@ -14,6 +14,7 @@ export const pubsub = new PubSub();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const USER_ADDED = 'USER_ADDED';
+const USER_UPDATED = 'USER_UPDATED';
 const USER_DELETED = 'USER_DELETED';
 
 // UPLOAD FILE
@@ -91,6 +92,22 @@ export default {
             });
         },
 
+        async UpdateUser(obj, args, ctx, info) {
+            if (args.user.hasOwnProperty('password')) { // updating password
+                args.user.password = await bcrypt.hash(args.user.password, 12);
+            }
+
+            return neo4jgraphql(obj, args, ctx, info).then(res => {
+                pubsub.publish(USER_UPDATED, {
+                    mutation: 'UPDATED',
+                    data: res,
+                    previousValues: args.user
+                });
+
+                return res;
+            });
+        },
+
         DeleteUser(obj, args, ctx, info) {
             return neo4jgraphql(obj, args, ctx, info).then(res => {
                 pubsub.publish(USER_DELETED, {
@@ -104,7 +121,7 @@ export default {
     },
     Subscription: {
         usersChange: {
-            subscribe: () => pubsub.asyncIterator([USER_ADDED, USER_DELETED]),
+            subscribe: () => pubsub.asyncIterator([USER_ADDED, USER_DELETED, USER_UPDATED]),
             resolve: (payload, args, ctx, info) => {
                 return payload
             }

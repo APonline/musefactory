@@ -5,8 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { AngularMaterialModule } from './angular-material.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // used to create fake backend
 import { ErrorInterceptor } from './helpers/error.interceptor';
@@ -26,6 +24,9 @@ import { AlertService } from './services/alert.service';
 import { AuthenticationService } from './services/authentication.service';
 import { UserService } from './services/user.service';
 
+// Modules
+import { UserModule } from './containers/user/user.module';
+
 // Components
 import { AppComponent } from './app.component';
 import { HomeContainer } from './containers/home/home.component';
@@ -35,6 +36,8 @@ import { AlertComponent } from './components/alert/alert.component';
 import { LandingContainer} from './containers/landing/landing.component';
 import { MainNavComponent } from './components/navigation/mainNav/mainNav.component';
 import { SignupContainer } from './containers/signup/signup.component';
+import { SharedModule } from './shared.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -50,13 +53,13 @@ import { SignupContainer } from './containers/signup/signup.component';
     MainNavComponent,
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule,
-    AngularMaterialModule,
+    SharedModule,
+    ApolloModule,
+    UserModule,
     BrowserAnimationsModule,
-    ApolloModule
+    BrowserModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

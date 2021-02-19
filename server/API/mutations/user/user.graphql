@@ -7,8 +7,31 @@ CreateUser(user: UserInput): User
                 id: i,
                 name: $user.firstname + ' ' + $user.lastname,
                 dateCreated: d,
+                tna: 1,
+                tnaDate: d,
                 active: 1
             })
+            SET u += $user
+
+            RETURN u as User
+        """
+    )
+
+VerifyUser(user: UserInput): User
+    @cypher (
+        statement: """
+            WITH datetime.transaction() as d
+            MATCH (u:User {id: $user.id, email: $user.email, username: $user.username})
+            SET u.verified = 1, u.verifiedDate = d
+
+            RETURN u as User
+        """
+    )
+
+UpdateUser(user: UserInput): User
+    @cypher (
+        statement: """
+             MATCH (u:User {id: $user.id})
             SET u += $user
 
             RETURN u as User

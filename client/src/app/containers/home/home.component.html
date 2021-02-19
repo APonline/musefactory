@@ -1,13 +1,10 @@
 <div id="home" class="page">
-  <app-register></app-register>
   <div class="glass">
     <h1>Hi {{currentUser.firstname}}!</h1>
-    <p>You're logged in with Angular 8!!</p>
     <h3>All registered users:</h3>
     <ul>
       <li *ngFor="let user of userList">
         {{user.username}} ({{user.firstname}} {{user.lastname}})
-        - <a (click)="deleteUser(user)" class="text-danger">Delete</a>
       </li>
     </ul>
   </div>

@@ -8,4 +8,8 @@ type User {
   active: Int
   dateCreated: Date
   password: String
+  tna: Int
+  tnaDate: Date
+  verified: Int
+  verifiedDate: Date
 }

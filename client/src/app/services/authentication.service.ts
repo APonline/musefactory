@@ -15,7 +15,6 @@ export class AuthenticationService {
 
   constructor(private apollo: Apollo) {
     this.use = localStorage.getItem('currentUser');
-
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(this.use));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -29,7 +28,7 @@ export class AuthenticationService {
       email,
       password
     };
-    console.log(variables);
+
     return this.apollo.query<Query>({
       query: gql`
           query Login($email: String, $password: String) {

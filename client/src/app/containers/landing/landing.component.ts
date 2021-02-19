@@ -5,7 +5,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 @Component({
   selector: 'app-landing',
   templateUrl: 'landing.component.html',
-  styleUrls: ['./landing.component.scss']
+  styleUrls: ['landing.component.scss']
  })
 export class LandingContainer implements OnInit {
 

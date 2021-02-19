@@ -7,4 +7,6 @@ export class User {
   lastname: string;
   token: string;
   error: string;
+  tna: number;
+  verified: number;
 }

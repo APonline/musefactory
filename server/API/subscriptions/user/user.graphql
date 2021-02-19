@@ -1,2 +1,3 @@
 usersChange: SubscriptionPayload
+userUpdated: SubscriptionPayload
 userDeleted: SubscriptionPayload

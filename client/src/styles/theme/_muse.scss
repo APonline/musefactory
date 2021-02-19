@@ -5,7 +5,7 @@
 @include mat-core();
 
 // define a real custom palette (using http://mcg.mbitson.com)
-$mat-intx: (
+$mat-mf: (
   50: #f6f3ee,
   100: #e8e1d6,
   200: #d9ceba,
@@ -38,7 +38,7 @@ $mat-intx: (
   ),
 );
 
-$mat-intx-accent: (
+$mat-mf-accent: (
   50: #eef1f6,
   100: #d6dce8,
   200: #bac5d9,
@@ -71,9 +71,9 @@ $mat-intx-accent: (
   ),
 );
 
-.intx-theme {
-  $primary: mat-palette($mat-intx, 500, 300, 800);
-  $accent: mat-palette($mat-intx-accent);
+.mf-theme {
+  $primary: mat-palette($mat-mf, 500, 300, 800);
+  $accent: mat-palette($mat-mf-accent);
   $warn: mat-palette($mat-pink);
   @include light-dark-theme($primary, $accent, $warn);
 }

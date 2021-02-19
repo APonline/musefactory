@@ -40,8 +40,13 @@ export class LoginComponent implements OnInit {
     this.returnUrl = '/';
   }
 
+  userLogin() {
+    this.onSubmit();
+  }
+
   // convenience getter for easy access to form fields
   get f() { return this.loginForm.controls; }
+
 
   onSubmit() {
     this.submitted = true;
@@ -61,9 +66,12 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.returnUrl]);
         },
         error => {
-          console.log(JSON.stringify(error.graphQLErrors[0].message))
           this.alertService.error(error.graphQLErrors[0].message);
           this.loading = false;
         });
+  }
+
+  registerUser() {
+    this.router.navigate(['/signup']);
   }
 }

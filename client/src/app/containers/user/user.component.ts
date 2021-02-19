@@ -5,11 +5,11 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.component.html',
-  styleUrls: ['home.component.scss']
+  selector: 'app-user',
+  templateUrl: 'user.component.html',
+  styleUrls: ['user.component.scss']
 })
-export class HomeContainer implements OnInit {
+export class UserContainer implements OnInit {
   currentUser: User;
   userList: any[];
 
@@ -25,5 +25,9 @@ export class HomeContainer implements OnInit {
     this.user.users.subscribe(user => {
       this.userList = user.data.User;
     });
+  }
+
+  async deleteUser(user) {
+    await this.user.delete(user);
   }
 }

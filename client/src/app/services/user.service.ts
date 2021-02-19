@@ -104,7 +104,37 @@ export class UserService {
     ).toPromise();
   }
 
-  async getUser(userProfile: User) {
+  async verify(userProfile: any) {
+    const user = {
+      id: userProfile.id,
+      username: userProfile.username,
+      email: userProfile.email.toLowerCase(),
+    };
+
+    return this.apollo.mutate<Mutation>({
+      mutation: gql`
+          mutation VerifyUser(
+            $user: UserInput
+          ) {
+            VerifyUser(
+              user: $user
+            ) {
+              id
+              email
+              username
+              tna
+            }
+          }
+        `,
+      variables: {
+        user
+      }
+    }).pipe(
+      map(result => result.data.VerifyUser)
+    ).toPromise();
+  }
+
+  async getUser(userProfile: any) {
     const variables = {
       username: userProfile.username,
       email: userProfile.email
@@ -132,6 +162,41 @@ export class UserService {
     ).toPromise();
   }
 
+  async updateUser(userProfile: any) {
+    let user = {
+      id: userProfile.id,
+      email: userProfile.email.toLowerCase(),
+    };
+
+    for(let field of Object.keys(userProfile)) {
+      user[field] = userProfile[field];
+    }
+
+    return this.apollo.mutate<Mutation>({
+      mutation: gql`
+          mutation UpdateUser(
+            $user: UserInput
+          ) {
+            UpdateUser(
+              user: $user
+            ) {
+              id
+              email
+              username
+              firstname
+              lastname
+            }
+          }
+        `,
+      variables: {
+        user
+      }
+    }).pipe(
+      tap(res => localStorage.setItem('currentUser', JSON.stringify(res.data.UpdateUser))),
+      map(result => result.data.UpdateUser)
+    ).toPromise();
+  }
+
   delete(user) {
     return this.apollo.mutate<Mutation>({
       mutation: gql`
@@ -154,7 +219,7 @@ export class UserService {
   }
 
 
-
+  // SUBSCRIPTION
   subscribeToUsers() {
     this.userListQuery.subscribeToMore({
       document: USER_SUB,
@@ -167,6 +232,13 @@ export class UserService {
           updatedValues = {
             ...prev,
             User: [...prev.User, newUserItem]
+          };
+        }
+
+        if (mutationType === 'UPDATED') {
+          updatedValues = {
+            ...prev,
+            User: [...prev.User.filter(user => user.id !== subscriptionData.data.usersChange.previousValues.id), newUserItem]
           };
         }
 

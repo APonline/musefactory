@@ -82,4 +82,12 @@ export class RegisterComponent implements OnInit {
         }
       );
   }
+
+  registerUser() {
+    this.onSubmit();
+  }
+
+  cancel() {
+    this.router.navigate(['/login']);
+  }
 }

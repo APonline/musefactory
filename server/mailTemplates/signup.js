@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 
 const uniqueCredentials = (verifyId, email, username) => {
     const subject = `Muse Factory Registration Completed!`;
@@ -69,12 +71,12 @@ const uniqueCredentials = (verifyId, email, username) => {
                     <br/>
                     <p style='color:#fff!important;'>Verify your account below.</p>
                     <br/>
-                    <a id='verify' href='https://musefactory.app/user/verify?id=${verifyId}&email=${email}'>Verify</a>
+                    <a id='verify' href='http://localhost:4200/user/verify?id=${verifyId}&email=${email}&username=${username}'>Verify</a>
                     <br/>
                     <br/>
                     <br/>
                     <br/>
-                    <a id='logo2' href='https://musefactory.app'><img width="100px" src="https://musefactory.app/assets/intrologo.png" /></a>
+                    <a id='logo2' href='https://musefactory.app' target='_new'><img width="100px" src="https://musefactory.app/assets/intrologo.png" /></a>
                 </div>
             </body>
         </html>
