@@ -30,7 +30,7 @@ export class MainNavComponent implements OnInit {
     }
 
     logout() {
+      this.currentUser = undefined;
       this.authenticationService.logout();
-      this.router.navigate(['/login']);
     }
 }

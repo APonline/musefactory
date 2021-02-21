@@ -8,6 +8,7 @@ import "regenerator-runtime/runtime.js";
 import { PubSub } from 'graphql-subscriptions';
 import sendMailOut from '../../mailserver';
 import uniqueCredentials from '../../mailTemplates/signup';
+import requestPassword from '../../mailTemplates/requestPassword';
 
 export const pubsub = new PubSub();
 pubsub.ee.setMaxListeners(0);
@@ -67,6 +68,20 @@ export default {
             );
 
             return user;
+        },
+        UserRequestPassword: (obj, args, ctx, info) => {
+
+            return neo4jgraphql(obj, args, ctx, info).then(res => {
+                if(res != null) {
+                    // sendmail
+                    let mailObj = requestPassword(res.id, res.email, res.username);
+                    sendMailOut(args.user.email, mailObj.subject, mailObj.plainText, mailObj.template);
+
+                    return res;
+                } else {
+                    return null;
+                }
+            });
         }
     },
     Mutation: {

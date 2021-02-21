@@ -5,6 +5,12 @@ type User {
   firstname: String
   lastname: String
   email: String
+  city: String
+  country: String
+  phone: String
+  age: Int
+  gender: String
+  birthday: String
   active: Int
   dateCreated: Date
   password: String

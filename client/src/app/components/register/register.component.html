@@ -40,6 +40,12 @@
         </div>
         <div class="form-group">
           <mat-form-field class="example-full-width">
+            <mat-label for="phone">Phone</mat-label>
+            <input matInput formControlName="phone" placeholder="Phone" [ngClass]="{ 'is-invalid': f.phone.errors }">
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="example-full-width">
             <mat-label for="password">Password</mat-label>
             <input type="password" matInput formControlName="password" placeholder="Password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
             <div *ngIf="submitted && f.password.errors" class="invalid-feedback">

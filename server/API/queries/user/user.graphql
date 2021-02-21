@@ -9,3 +9,11 @@ Login(email: String, password: String): User
         """
     )
 
+UserRequestPassword(user: UserInput): User
+    @cypher (
+        statement: """
+            MATCH (u:User {email: $user.email})
+
+            RETURN u as User
+        """
+    )

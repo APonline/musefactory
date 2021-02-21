@@ -104,6 +104,37 @@ export class UserService {
     ).toPromise();
   }
 
+  requestPasswordReset(userProfile: any) {
+
+    const user = {
+      email: userProfile.email.toLowerCase(),
+    };
+
+    return this.apollo.query<Query>({
+      query: gql`
+        query UserRequestPassword(
+          $user: UserInput
+        ){
+          UserRequestPassword(
+            user: $user
+          ) {
+            _id
+            id
+            name
+            username
+            email
+          }
+        }
+      `,
+      variables: {
+        user
+      },
+      fetchPolicy: 'network-only',
+    }).pipe(
+      map(result => result.data.UserRequestPassword)
+    ).toPromise();
+  }
+
   async verify(userProfile: any) {
     const user = {
       id: userProfile.id,

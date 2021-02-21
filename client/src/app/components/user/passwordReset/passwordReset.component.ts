@@ -14,7 +14,7 @@ export class PasswordResetComponent implements OnInit {
   resetPassForm: FormGroup;
   currentUser: any;
   profile: any;
-  loggedIn: boolean;
+  loggedIn= 0;
   submitted = false;
 
   constructor(
@@ -32,15 +32,18 @@ export class PasswordResetComponent implements OnInit {
     this.user.subscribeToUsers();
     this.currentUser = this.authenticationService.currentUserValue;
 
-    if (this.currentUser == null) {
-      this.loggedIn = false;
-
-      myUser = {
-        id,
-        email
+    if (this.currentUser == null) { //Not logged in
+      if (id != null) {
+        this.loggedIn = 0;
+        myUser = {
+          id,
+          email
+        }
+      } else {
+        this.loggedIn = 2;
       }
-    } else {
-      this.loggedIn = true;
+    } else { // is logged in
+      this.loggedIn = 1;
 
       myUser = {
         id: this.currentUser.id,
@@ -52,15 +55,21 @@ export class PasswordResetComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.resetPassForm = this.formBuilder.group({
-      id: ['', Validators.required],
-      email: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      passwordConfirm: ['', [Validators.required, Validators.minLength(6)]],
-    });
+    if (this.loggedIn < 2) {
+      this.resetPassForm = this.formBuilder.group({
+        id: ['', Validators.required],
+        email: ['', Validators.required],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        passwordConfirm: ['', [Validators.required, Validators.minLength(6)]],
+      });
 
-    this.resetPassForm.controls['email'].setValue(this.currentUser.email);
-    this.resetPassForm.controls['id'].setValue(this.currentUser.id);
+      this.resetPassForm.controls['email'].setValue(this.currentUser.email);
+      this.resetPassForm.controls['id'].setValue(this.currentUser.id);
+    } else {
+      this.resetPassForm = this.formBuilder.group({
+        email: ['', Validators.required]
+      });
+    }
   }
 
   // convenience getter for easy access to form fields
@@ -71,6 +80,23 @@ export class PasswordResetComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['/user/profile']);
+  }
+
+  requestPasswordChange() {
+    this.submitted = true;
+    let reqEmail = this.resetPassForm.get('email').value;
+    const newUpdate = {
+      email: reqEmail,
+    };
+
+    this.user.requestPasswordReset(newUpdate).then((res) => {
+      if (res != null) {
+        this.router.navigate(['/login']);
+        this.alertService.success('Password Reset Request sent!', true);
+      } else {
+        this.alertService.error('That Email is not in the system.', true);
+      }
+    });
   }
 
   changePassword() {

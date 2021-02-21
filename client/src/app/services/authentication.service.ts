@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Injectable, Inject } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +14,7 @@ export class AuthenticationService {
   public currentUser: Observable<User>;
   use = '';
 
-  constructor(private apollo: Apollo) {
+  constructor(private apollo: Apollo, @Inject(DOCUMENT) private _document: Document) {
     this.use = localStorage.getItem('currentUser');
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(this.use));
     this.currentUser = this.currentUserSubject.asObservable();
@@ -62,5 +63,6 @@ export class AuthenticationService {
     // remove user from local storage and set current user to null
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    this._document.defaultView.location.reload();
   }
 }

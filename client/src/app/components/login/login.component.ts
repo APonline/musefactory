@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    @Inject(DOCUMENT) private _document: Document
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
@@ -36,8 +38,6 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required]
     });
 
-    // get return url from route parameters or default to '/'
-    this.returnUrl = '/';
   }
 
   userLogin() {
@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
     this.authenticationService.login(this.f.email.value, this.f.password.value)
       .then(
         data => {
-          this.router.navigate([this.returnUrl]);
+          this._document.defaultView.location.reload();
         },
         error => {
           this.alertService.error(error.graphQLErrors[0].message);
