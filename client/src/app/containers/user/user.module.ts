@@ -17,6 +17,7 @@ import { VerifyComponent } from "src/app/components/user/verify/verify.component
   imports: [
     UserRoutingModule,
     SharedModule
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class UserModule {}

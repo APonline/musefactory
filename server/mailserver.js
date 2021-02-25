@@ -16,6 +16,7 @@ const sendMailOut = (sendTo, sendSubject, sendText, sendHtml) => {
 
     transporter.sendMail(
         { 
+            from: '"MF" <noreply@musefactory.app>',
             to: sendTo,
             subject: sendSubject,
             text: sendText,

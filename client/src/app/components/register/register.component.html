@@ -46,6 +46,26 @@
         </div>
         <div class="form-group">
           <mat-form-field class="example-full-width">
+            <mat-label for="city">City</mat-label>
+            <input matInput formControlName="city" placeholder="city" [ngClass]="{ 'is-invalid': f.city.errors }">
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="example-full-width">
+            <mat-label for="country">Country</mat-label>
+            <input matInput formControlName="country" placeholder="country" [ngClass]="{ 'is-invalid': f.country.errors }">
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field color="primary" appearance="fill">
+            <mat-label>Inherited calendar color</mat-label>
+            <input matInput [matDatepicker]="birthday" formControlName="birthday">
+            <mat-datepicker-toggle matSuffix [for]="birthday"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field class="example-full-width">
             <mat-label for="password">Password</mat-label>
             <input type="password" matInput formControlName="password" placeholder="Password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
             <div *ngIf="submitted && f.password.errors" class="invalid-feedback">

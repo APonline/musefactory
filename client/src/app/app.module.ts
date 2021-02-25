@@ -59,7 +59,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ApolloModule,
     UserModule,
     BrowserAnimationsModule,
-    BrowserModule
+    BrowserModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

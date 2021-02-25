@@ -5,6 +5,8 @@ export class User {
   email: string;
   firstname: string;
   lastname: string;
+  phone: string;
+  location: string;
   token: string;
   error: string;
   tna: number;

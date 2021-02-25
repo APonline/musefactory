@@ -5,6 +5,7 @@ import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 
 
+
 @NgModule({
   declarations: [
 
@@ -14,7 +15,7 @@ import { RouterModule } from "@angular/router";
     ReactiveFormsModule,
     CommonModule,
     FormsModule,
-    RouterModule,
+    RouterModule
   ],
   exports: [
     AngularMaterialModule,

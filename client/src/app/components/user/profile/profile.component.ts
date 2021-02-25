@@ -93,7 +93,9 @@ export class ProfileComponent implements OnInit {
 
   async deleteUser() {
     const user = {
-      id: this.currentUser.id
+      id: this.currentUser.id,
+      email: this.currentUser.email,
+      username: this.currentUser.username
     }
     await this.user.delete(user);
     this.router.navigate(['/logout']);

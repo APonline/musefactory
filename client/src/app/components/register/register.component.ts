@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
+import { DOCUMENT } from '@angular/common';
 
 import { AlertService } from '../../services/alert.service';
 import { UserService } from '../../services/user.service';
 import { AuthenticationService } from '../../services/authentication.service';
-
 
 @Component({
   selector: 'app-register',
@@ -14,6 +14,7 @@ import { AuthenticationService } from '../../services/authentication.service';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
+
   registerForm: FormGroup;
   loading = false;
   submitted = false;
@@ -23,7 +24,8 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    @Inject(DOCUMENT) private _document: Document
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
@@ -40,6 +42,7 @@ export class RegisterComponent implements OnInit {
       phone: [''],
       city: [''],
       country: [''],
+      birthday: [''],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
@@ -68,7 +71,7 @@ export class RegisterComponent implements OnInit {
             this.authenticationService.login(data.email, this.registerForm.value.password)
               .then(
                 data => {
-                  this.router.navigate(['/']);
+                  this._document.defaultView.location.reload();
                 },
                 error => {
                   this.alertService.error(error);

@@ -9,6 +9,7 @@ import { PubSub } from 'graphql-subscriptions';
 import sendMailOut from '../../mailserver';
 import uniqueCredentials from '../../mailTemplates/signup';
 import requestPassword from '../../mailTemplates/requestPassword';
+import deleteAccount from '../../mailTemplates/deleteAccount';
 
 export const pubsub = new PubSub();
 pubsub.ee.setMaxListeners(0);
@@ -126,11 +127,17 @@ export default {
 
         DeleteUser(obj, args, ctx, info) {
             return neo4jgraphql(obj, args, ctx, info).then(res => {
+                console.log(args.user, res)
                 pubsub.publish(USER_DELETED, {
                     mutation: 'DELETED',
                     data: args.user,
                     previousValues: args.user
                 });
+
+                // sendmail
+                let mailObj = deleteAccount(args.user.id, args.user.email, args.user.username);
+                sendMailOut(args.user.email, mailObj.subject, mailObj.plainText, mailObj.template);
+
                 return args.user;
             });
         }

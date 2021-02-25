@@ -238,6 +238,8 @@ export class UserService {
               user: $user
             ) {
               id
+              email
+              username
             }
           }
         `,
