@@ -10,8 +10,8 @@ import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  templateUrl: 'register.component.html',
+  styleUrls: ['register.component.scss']
 })
 export class RegisterComponent implements OnInit {
 
@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
       phone: [''],
       city: [''],
       country: [''],
-      birthday: [''],
+      //birthday: [''],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
