@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
+//import { MatSelectModule } from '@angular/material/select';
 import {MatSelectInfiniteScrollModule} from 'ng-mat-select-infinite-scroll';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -46,7 +46,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatStepperModule,
     MatSlideToggleModule,
     MatCheckboxModule,
-    MatSelectModule,
+    //MatSelectModule,
     MatSelectInfiniteScrollModule,
     MatGridListModule,
     MatSidenavModule,

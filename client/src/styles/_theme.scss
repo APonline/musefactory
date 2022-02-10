@@ -1,4 +1,4 @@
-@import "~@angular/material/theming";
+@import "@angular/material/theming";
 @import "./component";
 
 @mixin light-dark-theme($primary, $accent, $warn) {
