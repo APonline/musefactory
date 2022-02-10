@@ -21,7 +21,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const auth = jwt({
     secret: "ilikemusefactory",
-    credentialsRequired: false
+    credentialsRequired: false,
+    algorithms: ['RS256']
 });
 // JWT ENDS
 
